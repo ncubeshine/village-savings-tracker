@@ -11,25 +11,25 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             ZStack{
-                Color.red
+                Color.cyan
                     .ignoresSafeArea()
            
             VStack {
-                Text("Welcome to")
-                    .fontWeight(.bold)
-                    .font(.largeTitle)
+                //Text("Welcome to")
+                   // .fontWeight(.bold)
+                    //.font(.largeTitle)
                 Spacer()
                 Image("Applogo")
                     .resizable()
-                    .frame(width: 400, height: 400)
+                    .frame(width: 600, height: 600)
                     .imageScale(.medium)
                     .foregroundStyle(.tint)
-                Spacer()
                 
-                Text("UBUNTUFUND SAVINGS TRACKER")
-                    .fontWeight(.bold)
-                    .font(.largeTitle)
-                Spacer()
+                
+               // Text("UBUNTUFUND SAVINGS TRACKER")
+                    //.fontWeight(.bold)
+                    //.font(.largeTitle)
+                
                 
               
                 NavigationLink{
@@ -37,7 +37,7 @@ struct ContentView: View {
                 } label: {
                     Text("->")
                         .font(.largeTitle)
-                        .foregroundStyle(.mint)
+                        .foregroundStyle(.orange)
             }
             .padding()
            
