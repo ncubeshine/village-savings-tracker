@@ -9,13 +9,42 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack{
+            ZStack{
+                Color.red
+                    .ignoresSafeArea()
+           
+            VStack {
+                Text("Welcome to")
+                    .fontWeight(.bold)
+                    .font(.largeTitle)
+                Spacer()
+                Image("Applogo")
+                    .resizable()
+                    .frame(width: 400, height: 400)
+                    .imageScale(.medium)
+                    .foregroundStyle(.tint)
+                Spacer()
+                
+                Text("UBUNTUFUND SAVINGS TRACKER")
+                    .fontWeight(.bold)
+                    .font(.largeTitle)
+                Spacer()
+                
+              
+                NavigationLink{
+                    //descriptionPage()
+                } label: {
+                    Text("->")
+                        .font(.largeTitle)
+                        .foregroundStyle(.mint)
+            }
+            .padding()
+           
+                
+            }
         }
-        .padding()
+        }
     }
 }
 
