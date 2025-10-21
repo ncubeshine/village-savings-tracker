@@ -11,33 +11,46 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             ZStack{
-                Color.cyan
+                Color.orange.opacity(0.3)
                     .ignoresSafeArea()
+                    
            
-            VStack {
+                VStack (spacing: 50){
                 //Text("Welcome to")
                    // .fontWeight(.bold)
                     //.font(.largeTitle)
-                Spacer()
-                Image("Applogo")
+                
+                Image("applogo")
                     .resizable()
-                    .frame(width: 600, height: 600)
+                    .frame(width: 400, height: 400)
                     .imageScale(.medium)
-                    .foregroundStyle(.tint)
+                   // .foregroundStyle(.tint)
+                
+                //Spacer()
+                
+            Text("Welcome to")
+                    .font(.headline)
+                    .fontWeight(.bold)
                 
                 
-               // Text("UBUNTUFUND SAVINGS TRACKER")
-                    //.fontWeight(.bold)
-                    //.font(.largeTitle)
+               Text("Empowering Your Village, Your Savings, Your Future One Coin at a Time.")
+                    .fontWeight(.bold)
+                    .font(.headline)
                 
+                Spacer()
                 
               
                 NavigationLink{
                     //descriptionPage()
                 } label: {
-                    Text("->")
-                        .font(.largeTitle)
-                        .foregroundStyle(.orange)
+                    Text("Get Started")
+                        .font(.headline)
+                        .padding()
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 40)
             }
             .padding()
            
