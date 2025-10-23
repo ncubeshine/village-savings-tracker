@@ -16,24 +16,16 @@ struct ContentView: View {
                     
            
                 VStack (spacing: 50){
-                //Text("Welcome to")
-                   // .fontWeight(.bold)
-                    //.font(.largeTitle)
-                
-                Image("applogo")
-                    .resizable()
-                    .frame(width: 400, height: 400)
-                    .imageScale(.medium)
-                   // .foregroundStyle(.tint)
-                
-                //Spacer()
-                
             Text("Welcome to")
-                    .font(.headline)
+                        .font(.title)
                     .fontWeight(.bold)
+                    
+                    Image("applogo")
+                        .resizable()
+                        .frame(width: 350, height: 350)
+                        .imageScale(.medium)
                 
-                
-               Text("Empowering Your Village, Your Savings, Your Future One Coin at a Time.")
+               Text(" Your Savings, Your Future One Coin at a Time.")
                     .fontWeight(.bold)
                     .font(.headline)
                 
@@ -41,7 +33,7 @@ struct ContentView: View {
                 
               
                 NavigationLink{
-                    //descriptionPage()
+                    descriptionPage()
                 } label: {
                     Text("Get Started")
                         .font(.headline)

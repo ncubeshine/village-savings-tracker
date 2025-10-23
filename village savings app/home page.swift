@@ -38,9 +38,14 @@ struct HomePage: View{
                         
                     VStack{
                         HStack(spacing: 20) {
+                            NavigationLink {
+                                MembersPage()
+                            } label: {
+                                SummaryCard(title: "👥 Number of Members", value: "\(NumberOfMembers)", color: .gray)
+                                
+                            }
                             SummaryCard(title: "💰Total Savings", value: "\(totalSavings)", color: .brown)
-                            SummaryCard(title: "👥 Number of Members", value: "\(NumberOfMembers)", color: .gray)
-                            
+                           
                           
                         }
                         .padding(.horizontal)
@@ -53,21 +58,11 @@ struct HomePage: View{
                         
                     }
                         
-                      
-                        
-                        
-                     
-                        
-                        
-                        
-                        
                     }
                 }
             }
         }
     }
-
-
 
 struct SummaryCard: View {
     var title: String
@@ -75,44 +70,46 @@ struct SummaryCard: View {
     var color: Color
     
     var body: some View {
-        VStack(alignment: .center, spacing: 18) {
-            Text(title)
-                .font(.headline)
-                .foregroundColor(.white.opacity(0.8))
-            Text(value)
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
+        VStack {
+            VStack(alignment: .center, spacing: 18) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.white.opacity(0.8))
+                Text(value)
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+            }
+            .frame(maxWidth: .infinity, minHeight: 250)
+            .padding()
+            .background(color)
+            .cornerRadius(15)
+            .shadow(radius: 5)
         }
-        .frame(maxWidth: .infinity, minHeight: 250)
-        .padding()
-        .background(color)
-        .cornerRadius(15)
-        .shadow(radius: 5)
     }
-}
-
-
-struct ActionButton: View {
-    var title: String
-    var icon: String
-    var color: Color
     
-    var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
-                .foregroundColor(.white)
-            Text(title)
-                .font(.footnote)
-                .foregroundColor(.white)
+    
+    struct ActionButton: View {
+        var title: String
+        var icon: String
+        var color: Color
+        
+        var body: some View {
+            VStack(spacing: 10) {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.white)
+                Text(title)
+                    .font(.footnote)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 130, height: 100)
+            .background(color)
+            .cornerRadius(15)
+            .shadow(radius: 3)
         }
-        .frame(width: 130, height: 100)
-        .background(color)
-        .cornerRadius(15)
-        .shadow(radius: 3)
     }
 }
 #Preview {

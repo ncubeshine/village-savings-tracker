@@ -28,7 +28,7 @@ struct descriptionPage: View {
                        // homePage()
                     //} label: {
                     NavigationLink(destination: HomePage()) {
-                        Text("Get Started")
+                        Text("Next")
                             .padding()
                             .background(Color.black)
                             .foregroundColor(.white)
