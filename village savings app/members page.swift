@@ -14,6 +14,7 @@ struct Member: Identifiable, Hashable {
     var email: String
     var role: String
     var phone: String
+    
 }
 
 // MARK: - Main View

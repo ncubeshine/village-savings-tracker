@@ -23,95 +23,107 @@ struct HomePage: View{
                 
                 ScrollView{
                     VStack(alignment: .leading, spacing: 25){
-                            Text("Summary Dashboard")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.black)
-                            
-                            
-                            Spacer()
-                            
-                            
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 10)
+                        Text("Summary Dashboard")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
                         
+                        
+                        Spacer()
+                        
+                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 10)
+                    
                     VStack{
-                        HStack(spacing: 20) {
+                        VStack(spacing: 20) {
                             NavigationLink {
                                 MembersPage()
                             } label: {
                                 SummaryCard(title: "👥 Number of Members", value: "\(NumberOfMembers)", color: .gray)
                                 
+                                HStack(spacing: 20) {
+                                    NavigationLink {
+                                        ContributionView()
+                                    }label:{
+                                        SummaryCard(title: " 💰Recent Contributions", value: "\(RecentContributions)", color: .gray)
+                                    }
+                                    
+                                    
+                                }
+                                
                             }
-                            SummaryCard(title: "💰Total Savings", value: "\(totalSavings)", color: .brown)
                            
-                          
+                                HStack(spacing: 20){
+                                    SummaryCard(title: "💰Total Savings", value: "\(totalSavings)", color: .brown)
+                                }
+                            
+                            HStack(spacing: 20){
+                                
+                                SummaryCard(title: "📅Upcoming meetings/targets🎯", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
+                            }
                         }
-                        .padding(.horizontal)
-                        
-                        HStack(spacing: 20) {
-                            SummaryCard(title: " 💰Recent Contributions", value: "\(RecentContributions)", color: .gray)
-                            SummaryCard(title: "📅Upcoming meetings/targets🎯", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
-                        }
-                        .padding(.horizontal)
-                        
                     }
+                            .padding(.horizontal)
+                            
+                        }
                         
                     }
                 }
             }
         }
-    }
-
-struct SummaryCard: View {
-    var title: String
-    var value: String
-    var color: Color
-    
-    var body: some View {
-        VStack {
-            VStack(alignment: .center, spacing: 18) {
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(.white.opacity(0.8))
-                Text(value)
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-            }
-            .frame(maxWidth: .infinity, minHeight: 250)
-            .padding()
-            .background(color)
-            .cornerRadius(15)
-            .shadow(radius: 5)
-        }
-    }
     
     
-    struct ActionButton: View {
+    struct SummaryCard: View {
         var title: String
-        var icon: String
+        var value: String
         var color: Color
         
         var body: some View {
-            VStack(spacing: 10) {
-                Image(systemName: icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.white)
-                Text(title)
-                    .font(.footnote)
-                    .foregroundColor(.white)
+            VStack {
+                VStack(alignment: .center, spacing: 18) {
+                    Text(title)
+                        .font(.headline)
+                        .foregroundColor(.white.opacity(0.8))
+                    Text(value)
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
+                .frame(maxWidth: .infinity, minHeight: 250)
+                .padding()
+                .background(color)
+                .cornerRadius(15)
+                .shadow(radius: 5)
             }
-            .frame(width: 130, height: 100)
-            .background(color)
-            .cornerRadius(15)
-            .shadow(radius: 3)
+        }
+        
+        
+        struct ActionButton: View {
+            var title: String
+            var icon: String
+            var color: Color
+            
+            var body: some View {
+                VStack(spacing: 10) {
+                    Image(systemName: icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.white)
+                    Text(title)
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                }
+                .frame(width: 130, height: 100)
+                .background(color)
+                .cornerRadius(15)
+                .shadow(radius: 3)
+            }
         }
     }
-}
+
 #Preview {
     HomePage()
 }
