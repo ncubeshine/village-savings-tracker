@@ -41,6 +41,7 @@ struct ContributionsPage: View {
     // Alert navigation
     @State private var showPostContributionAlert = false
     @State private var navigateToWithdrawals = false
+    @State private var navigateToReports = false
     
     var totalContributions: Double {
         contributions.reduce(0) { $0 + $1.amount }
@@ -104,10 +105,26 @@ struct ContributionsPage: View {
                         .foregroundColor(.white)
                         .cornerRadius(8)
                         .padding(.horizontal)
+                    
+                    
                 }
-                
+                Button(action: {
+                    navigateToReports = true
+                }) {
+                    Text("View Reports / History")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.orange)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.horizontal)
+                }
                 NavigationLink(destination: WithdrawalsPage(), isActive: $navigateToWithdrawals) {
                     EmptyView()
+                
+                    NavigationLink(destination: ReportsPage(contributions: []), isActive: $navigateToReports) {
+                        EmptyView()
+                    }
                 }
             }
             .navigationTitle("Contributions")
