@@ -4,104 +4,176 @@
 //
 //  Created by Shine Ncube on 10/23/25.
 //
+import SwiftUI
 import Foundation
 
+// Model for a Contribution
 struct Contribution: Identifiable {
     let id = UUID()
-    var name: String
+    var memberName: String
     var amount: Double
-    var email: String
-    var phone: String
-    var role: String
+    var date: Date
+    var notes: String
 }
 
-import SwiftUI
-import Combine
-
-class ContributionViewModel: ObservableObject {
-    @Published var contributions: [Contribution] = []
-    
-    var totalSavings: Double {
-        contributions.reduce(0) { $0 + $1.amount }
-        
-    }
-
-    //func share(for member: Member) -> Double {
-        //guard totalSavings > 0 else { return 0 }
-        //return (member.amount / totalSavings) * 100
-    }
-    
-    func addContribution(name: String, amount: Double) {
-        guard !name.isEmpty, amount > 0 else { return }
-        //contributions.append(contributions(name: name, email: email, role: role, phone: phone, amount: <#String#>))
-    }
+// Dummy Withdrawals Page
+//struct WithdrawalsPage: View {
+//    var body: some View {
+//        Text("Withdrawals / Loans Page")
+//            .font(.largeTitle)
+//            .padding()
+//    }
 //}
 
-import SwiftUI
-
-struct ContributionView: View {
-    @StateObject private var viewModel = ContributionViewModel()
-    @State private var name = ""
+struct ContributionsPage: View {
+    @State private var contributions: [Contribution] = []
+    
+    // Form fields
+    @State private var memberName = ""
     @State private var amount = ""
-    @State private var email = ""
-    @State private var role = ""
-    @State private var phone = ""
+    @State private var date = Date()
+    @State private var notes = ""
+    
+    // For editing
+    @State private var editingContribution: Contribution? = nil
+    @State private var showForm = false
+    
+    // Alert navigation
+    @State private var showPostContributionAlert = false
+    @State private var navigateToWithdrawals = false
+    
+    var totalContributions: Double {
+        contributions.reduce(0) { $0 + $1.amount }
+    }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                Form {
-                    Section(header: Text("Add Contribution")) {
-                        TextField("Member name", text: $name)
-                        TextField("Amount", text: $amount)
-                            .keyboardType(.decimalPad)
-                        
-                       //Button(action: addContribution) {
-                            Label("Add", systemImage: "plus.circle.fill")
-//                        }
-                        .disabled(name.isEmpty || amount.isEmpty)
-                    }
-                    
-                    Section(header: Text("Total Savings")) {
-                        Text("₦\(viewModel.totalSavings, specifier: "%.2f")")
-                            .font(.headline)
-                    }
-                    
-                    Section(header: Text("Members")) {
-                        if $viewModel.contributions.isEmpty {
-                            Text("No contributions yet.")
-                                .foregroundColor(.secondary)
-                        } else {
-                            ForEach($viewModel.contributions) { member in
-                                HStack {
-                                    //Text(member.name)
-                                    Spacer()
-                                    VStack(alignment: .trailing) {
-                                        //Text("₦\(member.amount, specifier: "%.2f")")
-                                        //Text("\(viewModel.share(for: //contributions), specifier: "%.2f")% share")
-                                            //.font(.caption)
-                                            //.foregroundColor(.secondary)
-                                    }
+                // Total Contributions
+                Text("Total Contributions: $\(totalContributions, specifier: "%.2f")")
+                    .font(.title2)
+                    .padding()
+                
+                List {
+                    ForEach(contributions) { contribution in
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("\(contribution.memberName)")
+                                    .font(.headline)
+                                Spacer()
+                                Text("$\(contribution.amount, specifier: "%.2f")")
+                                    .bold()
+                            }
+                            Text("Date: \(contribution.date.formatted(date: .abbreviated, time: .omitted))")
+                            if !contribution.notes.isEmpty {
+                                Text("Notes: \(contribution.notes)").italic()
+                            }
+                        }
+                        .contextMenu {
+                            Button("Edit") {
+                                editingContribution = contribution
+                                memberName = contribution.memberName
+                                amount = "\(contribution.amount)"
+                                date = contribution.date
+                                notes = contribution.notes
+                                showForm = true
+                            }
+                            Button("Delete", role: .destructive) {
+                                if let index = contributions.firstIndex(where: { $0.id == contribution.id }) {
+                                    contributions.remove(at: index)
                                 }
                             }
                         }
                     }
                 }
-                .navigationTitle("Contributions")
+                
+                // Add / Edit Button
+                Button(action: {
+                    showForm = true
+                    if editingContribution == nil {
+                        memberName = ""
+                        amount = ""
+                        date = Date()
+                        notes = ""
+                    }
+                }) {
+                    Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .padding(.horizontal)
+                }
+                
+                NavigationLink(destination: WithdrawalsPage(), isActive: $navigateToWithdrawals) {
+                    EmptyView()
+                }
+            }
+            .navigationTitle("Contributions")
+            .sheet(isPresented: $showForm) {
+                NavigationView {
+                    Form {
+                        Section(header: Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")) {
+                            TextField("Member Name", text: $memberName)
+                            TextField("Amount", text: $amount)
+                                .keyboardType(.decimalPad)
+                            DatePicker("Date", selection: $date, displayedComponents: .date)
+                            TextField("Notes (Optional)", text: $notes)
+                        }
+                        Button(editingContribution == nil ? "Save" : "Update") {
+                            guard let amountValue = Double(amount) else { return }
+                            
+                            if let editing = editingContribution,
+                               let index = contributions.firstIndex(where: { $0.id == editing.id }) {
+                                contributions[index].memberName = memberName
+                                contributions[index].amount = amountValue
+                                contributions[index].date = date
+                                contributions[index].notes = notes
+                            } else {
+                                let newContribution = Contribution(
+                                    memberName: memberName,
+                                    amount: amountValue,
+                                    date: date,
+                                    notes: notes
+                                )
+                                contributions.append(newContribution)
+                                // Show alert after adding
+                                showPostContributionAlert = true
+                            }
+                            
+                            editingContribution = nil
+                            showForm = false
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(8)
+                    }
+                    .navigationTitle(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                editingContribution = nil
+                                showForm = false
+                            }
+                        }
+                    }
+                }
+            }
+            .alert("Contribution Added", isPresented: $showPostContributionAlert) {
+                Button("Go to Withdrawals") { navigateToWithdrawals = true }
+                Button("Stay on Contributions", role: .cancel) { }
+            } message: {
+                Text("Do you want to go to the Withdrawals page or stay here?")
             }
         }
     }
-    
-//    func addContribution() {
-//        if let value = Double(amount) {
-//            viewModel.addContribution(name: name, amount: value)
-//            name = ""
-//            amount = ""
-        }
-   // }
-//}
-
-#Preview {
-    ContributionView()
 }
 
+struct ContributionsPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ContributionsPage()
+    }
+}

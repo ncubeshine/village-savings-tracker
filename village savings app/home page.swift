@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct HomePage: View{
-    @State private var totalSavings = 2000
-    @State private var NumberOfMembers = 8
-    @State private var RecentContributions = 1250
+    @State private var withdrawals = ""
+    @State private var NumberOfMembers = ""
+    @State private var RecentContributions = ""
     @State private var UpcomingMeetingsAndTargets = ""
     @State private var isTaped = false
     
@@ -41,13 +41,13 @@ struct HomePage: View{
                             NavigationLink {
                                 MembersPage()
                             } label: {
-                                SummaryCard(title: "👥 Number of Members", value: "\(NumberOfMembers)", color: .gray)
+                                SummaryCard(title: "Number of Members", value: "\(NumberOfMembers)", color: .gray)
                                 
                                 HStack(spacing: 20) {
                                     NavigationLink {
-                                        ContributionView()
+                                        ContributionsPage()
                                     }label:{
-                                        SummaryCard(title: " 💰Recent Contributions", value: "\(RecentContributions)", color: .gray)
+                                        SummaryCard(title: "  Recent Contributions", value: "\(RecentContributions)", color: .gray)
                                     }
                                     
                                     
@@ -56,12 +56,17 @@ struct HomePage: View{
                             }
                            
                                 HStack(spacing: 20){
-                                    SummaryCard(title: "💰Total Savings", value: "\(totalSavings)", color: .brown)
+                                    NavigationLink {
+                                        WithdrawalsPage()
+                                    }label: {
+                                        SummaryCard(title: "withdrawals", value: "\(withdrawals)", color: .brown)
+                                    }
+                                    
                                 }
                             
                             HStack(spacing: 20){
                                 
-                                SummaryCard(title: "📅Upcoming meetings/targets🎯", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
+                                SummaryCard(title: "Upcoming meetings/targets", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
                             }
                         }
                     }
