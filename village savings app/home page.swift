@@ -45,7 +45,7 @@ struct HomePage: View{
                                 
                                 HStack(spacing: 20) {
                                     NavigationLink {
-                                        ContributionsPage(isAdmin: true)
+                                        ContributionsPage()
                                     }label:{
                                         SummaryCard(title: "  Recent Contributions", value: "\(RecentContributions)", color: .gray)
                                     }
