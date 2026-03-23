@@ -13,7 +13,7 @@ struct DescriptionPage: View {
     let members: [Member] = [
         Member(name: "Shine", email: "shine@example.com", role: "Admin", phone: "+263 78 777 7890"),
         Member(name: "Sarah", email: "sarah@example.com", role: "Member", phone: "+263 77 567 8901"),
-        Member(name: "Lucy", email: "lucy@example.com", role: "Members", phone: "+263 71 678 9012"),
+        Member(name: "Lucy", email: "lucy@example.com", role: "Member", phone: "+263 71 678 9012"),
         Member(name: "Tana", email: "tana@example.com", role: "Member", phone: "+263 77 789 0123"),
         Member(name: "Boity", email: "boity@example.com", role: "Member", phone: "+263 77 789 0123"),
         Member(name: "Ama", email: "ama@example.com", role: "Admin", phone: "+263 77 789 0123"),
