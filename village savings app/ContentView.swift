@@ -74,7 +74,7 @@ func verifyLogin(enteredPassword: String, keychainKey: String) -> Bool {
 }
 
 // MARK: - SwiftUI Views
-struct AuthenticationPage: View {
+struct ContentView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var message: String = ""
@@ -139,8 +139,8 @@ struct DashboardView: View {
 }
 
 // MARK: - Preview
-struct AuthenticationPage_Previews: PreviewProvider {
+struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthenticationPage()
+       ContentView()
     }
 }
