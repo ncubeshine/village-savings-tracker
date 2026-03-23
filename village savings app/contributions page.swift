@@ -4,13 +4,13 @@
 //
 //  Created by Shine Ncube on 10/23/25.
 //
+
+
 import SwiftUI
 import Foundation
 
 // Model for a Contribution
 struct Contribution: Identifiable, Codable, Equatable {
-    
-   
     
     var id = UUID()
     var memberName: String
