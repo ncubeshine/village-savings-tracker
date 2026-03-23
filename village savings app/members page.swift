@@ -19,20 +19,26 @@ struct Member: Identifiable, Hashable {
 
 // MARK: - Main View
 struct MembersPage: View {
+    var currentUser: Member
+    
     @State private var searchText = ""
     @State private var members: [Member] = [
-        Member(name: "Shine", email: "shine@example.com", role: "Leader", phone: "+263 78 777 7890"),
+        Member(name: "Shine", email: "shine@example.com", role: "Admin", phone: "+263 78 777 7890"),
         Member(name: "Sarah", email: "sarah@example.com", role: "Member", phone: "+263 77 567 8901"),
-        Member(name: "Lucy", email: "lucy@example.com", role: "Secretary", phone: "+263 71 678 9012"),
-        Member(name: "Tana", email: "tana@example.com", role: "Treasurer", phone: "+263 77 789 0123"),
+        Member(name: "Lucy", email: "lucy@example.com", role: "Member", phone: "+263 71 678 9012"),
+        Member(name: "Tana", email: "tana@example.com", role: "Member", phone: "+263 77 789 0123"),
         Member(name: "Boity", email: "boity@example.com", role: "Member", phone: "+263 77 789 0123"),
-        Member(name: "Ama", email: "ama@example.com", role: "Member", phone: "+263 77 789 0123"),
+        Member(name: "Ama", email: "ama@example.com", role: "Admin", phone: "+263 77 789 0123"),
         Member(name: "Privie", email: "privie@example.com", role: "Member", phone: "+263 77 789 0123"),
         Member(name: "Octie", email: "octie@example.com", role: "Member", phone: "+263 77 789 0123"),
     ]
     @State private var showingAddSheet = false
     @State private var showingRemoveSheet = false
     @State private var showingEditSheet = false
+    
+    var isAdmin: Bool {
+        currentUser.role == "Admin"
+    }
     
     // Filtered search results
     var filteredMembers: [Member] {
@@ -97,6 +103,7 @@ struct MembersPage: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        .disabled(!isAdmin)
                     }
                     .padding(.bottom, 16)
                 }
@@ -314,5 +321,12 @@ struct EditMemberSheet: View {
 }
 
 #Preview {
-    MembersPage()
+    MembersPage(
+        currentUser: Member(
+            name: "Preview User",
+            email: "preview@example.com",
+            role: "Admin",
+            phone: "+1 555 0100"
+        )
+    )
 }

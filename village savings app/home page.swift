@@ -7,128 +7,227 @@
 
 import SwiftUI
 
-struct HomePage: View{
+struct HomePage: View {
+    
+    var currentUser: Member   // 👈 RECEIVED FROM POPUP
+    
     @State private var withdrawals = ""
     @State private var NumberOfMembers = ""
     @State private var RecentContributions = ""
     @State private var UpcomingMeetingsAndTargets = ""
-    @State private var isTaped = false
     
+    var isAdmin: Bool {
+        currentUser.role.lowercased() == "admin"
+    }
     
     var body: some View {
-        NavigationStack{
-            ZStack{
+        NavigationStack {
+            ZStack {
                 Color.orange.opacity(0.3)
                     .ignoresSafeArea()
                 
-                ScrollView{
-                    VStack(alignment: .leading, spacing: 25){
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 25) {
+                        
                         Text("Summary Dashboard")
                             .font(.title)
                             .fontWeight(.bold)
-                            .foregroundColor(.black)
                         
+                        Text("Logged in as: \(currentUser.name) (\(currentUser.role))")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
                         
-                        Spacer()
-                        
-                        
-                    }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
-                    
-                    VStack{
                         VStack(spacing: 20) {
+                            
                             NavigationLink {
-                                MembersPage()
+                                MembersPage(currentUser: currentUser)
                             } label: {
-                                SummaryCard(title: "Number of Members", value: "\(NumberOfMembers)", color: .gray)
-                                
-                                HStack(spacing: 20) {
-                                    NavigationLink {
-                                        ContributionsPage()
-                                    }label:{
-                                        SummaryCard(title: "  Recent Contributions", value: "\(RecentContributions)", color: .gray)
-                                    }
-                                    
-                                    
-                                }
-                                
+                                SummaryCard(title: "Number of Members", value: NumberOfMembers, color: .gray)
                             }
-                           
-                                HStack(spacing: 20){
-                                    NavigationLink {
-                                        WithdrawalsPage()
-                                    }label: {
-                                        SummaryCard(title: "withdrawals", value: "\(withdrawals)", color: .brown)
-                                    }
-                                    
-                                }
                             
-                            HStack(spacing: 20){
-                                
-                                SummaryCard(title: "Upcoming meetings/targets", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
+                            NavigationLink {
+                                ContributionsPage(currentUser: currentUser)
+                            } label: {
+                                SummaryCard(title: "Recent Contributions", value: RecentContributions, color: .gray)
                             }
+                            
+                            NavigationLink {
+                                WithdrawalsPage(currentUser: currentUser)
+                            } label: {
+                                SummaryCard(title: "Withdrawals", value: withdrawals, color: .brown)
+                            }
+                            
+                            
+                            SummaryCard(title: "Upcoming meetings/targets", value: UpcomingMeetingsAndTargets, color: .brown)
                         }
                     }
-                            .padding(.horizontal)
-                            
-                        }
-                        
-                    }
+                    .padding()
                 }
-            }
-        }
-    
-    
-    struct SummaryCard: View {
-        var title: String
-        var value: String
-        var color: Color
-        
-        var body: some View {
-            VStack {
-                VStack(alignment: .center, spacing: 18) {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.white.opacity(0.8))
-                    Text(value)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-                .frame(maxWidth: .infinity, minHeight: 250)
-                .padding()
-                .background(color)
-                .cornerRadius(15)
-                .shadow(radius: 5)
-            }
-        }
-        
-        
-        struct ActionButton: View {
-            var title: String
-            var icon: String
-            var color: Color
-            
-            var body: some View {
-                VStack(spacing: 10) {
-                    Image(systemName: icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.white)
-                    Text(title)
-                        .font(.footnote)
-                        .foregroundColor(.white)
-                }
-                .frame(width: 130, height: 100)
-                .background(color)
-                .cornerRadius(15)
-                .shadow(radius: 3)
             }
         }
     }
+}
+
+struct SummaryCard: View {
+    let title: String
+    let value: String
+    let color: Color
+
+    var body: some View {
+        VStack(alignment: .center, spacing: 18) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.white.opacity(0.8))
+
+            Text(value)
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity, minHeight: 250)
+        .padding()
+        .background(color)
+        .cornerRadius(15)
+        .shadow(radius: 5)
+    }
+}
 
 #Preview {
-    HomePage()
+    HomePage(
+        currentUser: Member(
+            name: "Preview User",
+            email: "preview@example.com",
+            role: "Admin",
+            phone: "+1 555 0100"
+        )
+    )
 }
+
+//import SwiftUI
+//
+//struct HomePage: View{
+//    
+//    @State private var withdrawals = ""
+//    @State private var NumberOfMembers = ""
+//    @State private var RecentContributions = ""
+//    @State private var UpcomingMeetingsAndTargets = ""
+//    @State private var isTaped = false
+//    
+//    
+//    var body: some View {
+//        NavigationStack{
+//            ZStack{
+//                Color.orange.opacity(0.3)
+//                    .ignoresSafeArea()
+//                
+//                ScrollView{
+//                    VStack(alignment: .leading, spacing: 25){
+//                        Text("Summary Dashboard")
+//                            .font(.title)
+//                            .fontWeight(.bold)
+//                            .foregroundColor(.black)
+//                        
+//                        
+//                        Spacer()
+//                        
+//                        
+//                    }
+//                    .padding(.horizontal)
+//                    .padding(.top, 10)
+//                    
+//                    VStack{
+//                        VStack(spacing: 20) {
+//                            NavigationLink {
+//                                MembersPage()
+//                            } label: {
+//                                SummaryCard(title: "Number of Members", value: "\(NumberOfMembers)", color: .gray)
+//                                
+//                                HStack(spacing: 20) {
+//                                    NavigationLink {
+//                                        ContributionsPage()
+//                                    }label:{
+//                                        SummaryCard(title: "  Recent Contributions", value: "\(RecentContributions)", color: .gray)
+//                                    }
+//                                    
+//                                    
+//                                }
+//                                
+//                            }
+//                           
+//                                HStack(spacing: 20){
+//                                    NavigationLink {
+//                                        WithdrawalsPage()
+//                                    }label: {
+//                                        SummaryCard(title: "withdrawals", value: "\(withdrawals)", color: .brown)
+//                                    }
+//                                    
+//                                }
+//                            
+//                            HStack(spacing: 20){
+//                                
+//                                SummaryCard(title: "Upcoming meetings/targets", value: "\(UpcomingMeetingsAndTargets)", color: .brown)
+//                            }
+//                        }
+//                    }
+//                            .padding(.horizontal)
+//                            
+//                        }
+//                        
+//                    }
+//                }
+//            }
+//        }
+//    
+//    
+//    struct SummaryCard: View {
+//        var title: String
+//        var value: String
+//        var color: Color
+//        
+//        var body: some View {
+//            VStack {
+//                VStack(alignment: .center, spacing: 18) {
+//                    Text(title)
+//                        .font(.headline)
+//                        .foregroundColor(.white.opacity(0.8))
+//                    Text(value)
+//                        .font(.title)
+//                        .fontWeight(.bold)
+//                        .foregroundColor(.white)
+//                }
+//                .frame(maxWidth: .infinity, minHeight: 250)
+//                .padding()
+//                .background(color)
+//                .cornerRadius(15)
+//                .shadow(radius: 5)
+//            }
+//        }
+//        
+//        
+//        struct ActionButton: View {
+//            var title: String
+//            var icon: String
+//            var color: Color
+//            
+//            var body: some View {
+//                VStack(spacing: 10) {
+//                    Image(systemName: icon)
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 40, height: 40)
+//                        .foregroundColor(.white)
+//                    Text(title)
+//                        .font(.footnote)
+//                        .foregroundColor(.white)
+//                }
+//                .frame(width: 130, height: 100)
+//                .background(color)
+//                .cornerRadius(15)
+//                .shadow(radius: 3)
+//            }
+//        }
+//    }
+//
+//#Preview {
+//    HomePage()
+//}

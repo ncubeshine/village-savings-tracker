@@ -9,6 +9,9 @@ import Foundation
 
 // Model for a Contribution
 struct Contribution: Identifiable, Codable, Equatable {
+    
+   
+    
     var id = UUID()
     var memberName: String
     var amount: Double
@@ -22,6 +25,14 @@ struct Contribution: Identifiable, Codable, Equatable {
 }
 
 struct ContributionsPage: View {
+    var currentUser: Member
+    
+    var isAdmin: Bool {
+        currentUser.role.lowercased() == "admin"
+    }
+    
+    
+    
     @State private var contributions: [Contribution] = []
     
     // Form fields
@@ -107,6 +118,7 @@ struct ContributionsPage: View {
                         .cornerRadius(8)
                         .padding(.horizontal)
                 }
+                .disabled(!isAdmin)
                 
                 // Reports Button
                 Button(action: {
@@ -121,7 +133,7 @@ struct ContributionsPage: View {
                         .padding(.horizontal)
                 }
                 
-                NavigationLink(destination: WithdrawalsPage(), isActive: $navigateToWithdrawals) {
+                NavigationLink(destination: WithdrawalsPage(currentUser: currentUser), isActive: $navigateToWithdrawals) {
                     EmptyView()
                 }
                 
@@ -235,6 +247,13 @@ struct ContributionsPage: View {
 
 struct ContributionsPage_Previews: PreviewProvider {
     static var previews: some View {
-        ContributionsPage()
+        ContributionsPage(
+            currentUser: Member(
+                name: "Preview User",
+                email: "preview@example.com",
+                role: "Admin",
+                phone: "+1 555 0100"
+            )
+        )
     }
 }

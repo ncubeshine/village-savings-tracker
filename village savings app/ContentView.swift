@@ -33,7 +33,7 @@ struct ContentView: View {
                 
               
                 NavigationLink{
-                    descriptionPage()
+                    DescriptionPage()
                 } label: {
                     Text("Get Started")
                         .font(.headline)
