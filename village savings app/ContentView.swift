@@ -155,7 +155,7 @@ struct ContentView: View {
                 }
             }
             //.padding()
-            .navigationTitle("Savings Tracker Login")
+            .navigationTitle("Village Savings Tracker ")
         }
     }
 }
