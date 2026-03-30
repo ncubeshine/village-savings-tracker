@@ -87,7 +87,6 @@ struct MembersPage: View {
                     // Buttons at the bottom
                     HStack(spacing: 16) {
                         Button(action: {
-                            appData.members.append("New member")
                             showingAddSheet = true }) {
                             Text("Add")
                                 .frame(minWidth: 70)
