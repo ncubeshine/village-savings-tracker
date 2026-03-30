@@ -237,7 +237,9 @@ struct WithdrawalsPage: View {
             
             // MARK: Persistence
             .onAppear { loadWithdrawals() }
-            .onChange(of: withdrawals) { _ in saveWithdrawals() }
+            .onChange(of: withdrawals) { _, _ in
+                saveWithdrawals()
+            }
         }
     }
     

@@ -136,7 +136,7 @@ struct ContentView: View {
                 // ❌ ERROR TOAST (Red)
                 if showErrorToast {
                     VStack {
-                        Text("✖ Invalid username or password")
+                        Text("❌ Invalid username or password")
                             .foregroundColor(.white)
                             .padding()
                             .background(Color.red)
