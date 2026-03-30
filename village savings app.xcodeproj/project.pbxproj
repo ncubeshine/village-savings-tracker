@@ -29,6 +29,23 @@
 		843D0A552EA228FE00A39343 /* village savings appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "village savings appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AFA895412F7A6B570086EBDC /* Exceptions for "village savings appTests" folder in "village savings app" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				village_savings_appApp.swift,
+			);
+			target = 843D0A3D2EA228FC00A39343 /* village savings app */;
+		};
+		AFA895422F7A6B570086EBDC /* Exceptions for "village savings appTests" folder in "village savings appTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				village_savings_appApp.swift,
+			);
+			target = 843D0A4A2EA228FE00A39343 /* village savings appTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		843D0A402EA228FC00A39343 /* village savings app */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -37,12 +54,26 @@
 		};
 		843D0A4E2EA228FE00A39343 /* village savings appTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AFA895412F7A6B570086EBDC /* Exceptions for "village savings appTests" folder in "village savings app" target */,
+				AFA895422F7A6B570086EBDC /* Exceptions for "village savings appTests" folder in "village savings appTests" target */,
+			);
 			path = "village savings appTests";
 			sourceTree = "<group>";
 		};
 		843D0A582EA228FE00A39343 /* village savings appUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "village savings appUITests";
+			sourceTree = "<group>";
+		};
+		AFA895402F7A6B410086EBDC /* Finances */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Finances;
+			sourceTree = "<group>";
+		};
+		AFA8954A2F7A6BED0086EBDC /* Welcome */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Welcome;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +106,9 @@
 		843D0A352EA228FC00A39343 = {
 			isa = PBXGroup;
 			children = (
+				AFA8954A2F7A6BED0086EBDC /* Welcome */,
 				843D0A402EA228FC00A39343 /* village savings app */,
+				AFA895402F7A6B410086EBDC /* Finances */,
 				843D0A4E2EA228FE00A39343 /* village savings appTests */,
 				843D0A582EA228FE00A39343 /* village savings appUITests */,
 				843D0A3F2EA228FC00A39343 /* Products */,
@@ -109,6 +142,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				843D0A402EA228FC00A39343 /* village savings app */,
+				AFA895402F7A6B410086EBDC /* Finances */,
+				AFA8954A2F7A6BED0086EBDC /* Welcome */,
 			);
 			name = "village savings app";
 			packageProductDependencies = (
