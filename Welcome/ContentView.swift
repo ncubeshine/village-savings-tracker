@@ -149,13 +149,12 @@ struct ContentView: View {
                     .transition(.move(edge: .top))
                 }
                 
-                // Navigation
-                NavigationLink(destination: WelcomeView(), isActive: $navigateToHome) {
-                    EmptyView()
-                }
             }
             //.padding()
             .navigationTitle("Village Savings Tracker ")
+            .navigationDestination(isPresented: $navigateToHome) {
+                WelcomeView()
+            }
         }
     }
 }

@@ -58,17 +58,11 @@ struct DescriptionPage: View {
                 }
             }
             
-            // 👇 NAVIGATION AFTER SELECTION
-            .background(
-                NavigationLink(
-                    destination: selectedUser.map { user in
-                        AnyView(HomePage(currentUser: user))
-                    } ?? AnyView(EmptyView()),
-                    isActive: $goToHome
-                ) {
-                    EmptyView()
+            .navigationDestination(isPresented: $goToHome) {
+                if let selectedUser {
+                    HomePage(currentUser: selectedUser)
                 }
-            )
+            }
         }
     }
 }

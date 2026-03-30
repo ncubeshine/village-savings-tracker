@@ -133,15 +133,14 @@ struct ContributionsPage: View {
                         .padding(.horizontal)
                 }
                 
-                NavigationLink(destination: WithdrawalsPage(currentUser: currentUser), isActive: $navigateToWithdrawals) {
-                    EmptyView()
-                }
-                
-                NavigationLink(destination: ReportsPage(), isActive: $navigateToReports) {
-                    EmptyView()
-                }
             }
             .navigationTitle("Contributions")
+            .navigationDestination(isPresented: $navigateToWithdrawals) {
+                WithdrawalsPage(currentUser: currentUser)
+            }
+            .navigationDestination(isPresented: $navigateToReports) {
+                ReportsPage()
+            }
             
             // Load saved contributions when app opens
             .onAppear {
@@ -149,7 +148,7 @@ struct ContributionsPage: View {
             }
             
             // Automatically save whenever contributions change
-            .onChange(of: contributions) { _ in
+            .onChange(of: contributions) {
                 saveContributions()
             }
             
