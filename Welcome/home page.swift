@@ -12,9 +12,9 @@ import Combine
 
 // MARK: - SHARED DATA SOURCE
 class AppData: ObservableObject {
-    @Published var members: [Member] = []
-    @Published var contributions: [Contribution] = []
-    @Published var withdrawals: [Withdrawal] = []
+    @Published var members: [String] = []
+    @Published var contributions: [Double] = []
+    @Published var withdrawals: [Double] = []
     
     // Computed Dashboard Values
     var numberOfMembers: Int {
@@ -22,11 +22,11 @@ class AppData: ObservableObject {
     }
     
     var totalContributions: Double {
-        contributions.reduce(0) { $0 + $1.amount }
+        contributions.reduce(0, +)
     }
     
     var totalWithdrawals: Double {
-        withdrawals.reduce(0) { $0 + $1.amount }
+        withdrawals.reduce(0, +)
     }
 }
 
@@ -42,6 +42,12 @@ struct HomePage: View {
     }
     
     var body: some View {
+        VStack{
+            Text("Total Contribution: \(appData.totalContributions)")
+            Text("Total Withdrawals: \(appData.totalWithdrawals)")
+            Text(" Members: \(appData.numberOfMembers)")
+        }
+        
         NavigationStack {
             ZStack {
                 Color.orange.opacity(0.3)

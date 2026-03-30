@@ -56,84 +56,7 @@ struct ContributionsPage: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                
-                // Total Contributions
-                Text("Total Contributions: $\(totalContributions, specifier: "%.2f")")
-                    .font(.title2)
-                    .padding()
-                
-                List {
-                    ForEach(contributions) { contribution in
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text(contribution.memberName)
-                                    .font(.headline)
-                                Spacer()
-                                Text("$\(contribution.amount, specifier: "%.2f")")
-                                    .bold()
-                            }
-                            
-                            Text("Date: \(contribution.date.formatted(date: .abbreviated, time: .omitted))")
-                            
-                            if !contribution.notes.isEmpty {
-                                Text("Notes: \(contribution.notes)").italic()
-                            }
-                        }
-                        .contextMenu {
-                            Button("Edit") {
-                                editingContribution = contribution
-                                memberName = contribution.memberName
-                                amount = "\(contribution.amount)"
-                                date = contribution.date
-                                notes = contribution.notes
-                                showForm = true
-                            }
-                            
-                            Button("Delete", role: .destructive) {
-                                if let index = contributions.firstIndex(where: { $0.id == contribution.id }) {
-                                    contributions.remove(at: index)
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // Add Contribution Button
-                Button(action: {
-                    showForm = true
-                    
-                    if editingContribution == nil {
-                        memberName = ""
-                        amount = ""
-                        date = Date()
-                        notes = ""
-                    }
-                }) {
-                    Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                }
-                .disabled(!isAdmin)
-                
-                // Reports Button
-                Button(action: {
-                    navigateToReports = true
-                }) {
-                    Text("View Reports / History")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                }
-                
-            }
+            mainContent
             .navigationTitle("Contributions")
             .navigationDestination(isPresented: $navigateToWithdrawals) {
                 WithdrawalsPage(currentUser: currentUser)
@@ -153,65 +76,7 @@ struct ContributionsPage: View {
             }
             
             .sheet(isPresented: $showForm) {
-                NavigationView {
-                    Form {
-                        Section(header: Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")) {
-                            
-                            TextField("Member Name", text: $memberName)
-                            
-                            TextField("Amount", text: $amount)
-                                .keyboardType(.decimalPad)
-                            
-                            DatePicker("Date", selection: $date, displayedComponents: .date)
-                            
-                            TextField("Notes (Optional)", text: $notes)
-                        }
-                        
-                        Button(editingContribution == nil ? "Save" : "Update") {
-                            
-                            guard let amountValue = Double(amount) else { return }
-                            
-                            if let editing = editingContribution,
-                               let index = contributions.firstIndex(where: { $0.id == editing.id }) {
-                                
-                                contributions[index].memberName = memberName
-                                contributions[index].amount = amountValue
-                                contributions[index].date = date
-                                contributions[index].notes = notes
-                                
-                            } else {
-                                
-                                let newContribution = Contribution(
-                                    memberName: memberName,
-                                    amount: amountValue,
-                                    date: date,
-                                    notes: notes
-                                )
-                                
-                                contributions.append(newContribution)
-                                showPostContributionAlert = true
-                            }
-                            
-                            editingContribution = nil
-                            showForm = false
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(8)
-                    }
-                    .navigationTitle(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
-                    
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                editingContribution = nil
-                                showForm = false
-                            }
-                        }
-                    }
-                }
+                contributionFormView
             }
             
             .alert("Contribution Added", isPresented: $showPostContributionAlert) {
@@ -223,6 +88,112 @@ struct ContributionsPage: View {
                 
             } message: {
                 Text("Do you want to go to the Withdrawals page or stay here?")
+            }
+        }
+    }
+
+    private var mainContent: some View {
+        VStack {
+            Text("Total Contributions: $\(totalContributions, specifier: "%.2f")")
+                .font(.title2)
+                .padding()
+
+            List {
+                ForEach(contributions) { contribution in
+                    contributionRow(for: contribution)
+                }
+            }
+
+            addContributionButton
+            reportsButton
+        }
+    }
+
+    private func contributionRow(for contribution: Contribution) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text(contribution.memberName)
+                    .font(.headline)
+                Spacer()
+                Text("$\(contribution.amount, specifier: "%.2f")")
+                    .bold()
+            }
+
+            Text("Date: \(contribution.date.formatted(date: .abbreviated, time: .omitted))")
+
+            if !contribution.notes.isEmpty {
+                Text("Notes: \(contribution.notes)")
+                    .italic()
+            }
+        }
+        .contextMenu {
+            Button("Edit") {
+                startEditing(contribution)
+            }
+
+            Button("Delete", role: .destructive) {
+                deleteContribution(contribution)
+            }
+        }
+    }
+
+    private var addContributionButton: some View {
+        Button(action: startAddingContribution) {
+            Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.horizontal)
+        }
+        .disabled(!isAdmin)
+    }
+
+    private var reportsButton: some View {
+        Button(action: {
+            navigateToReports = true
+        }) {
+            Text("View Reports / History")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+                .padding(.horizontal)
+        }
+    }
+
+    private var contributionFormView: some View {
+        NavigationView {
+            Form {
+                Section(header: Text(editingContribution == nil ? "Add Contribution" : "Edit Contribution")) {
+                    TextField("Member Name", text: $memberName)
+
+                    TextField("Amount", text: $amount)
+                        .keyboardType(.decimalPad)
+
+                    DatePicker("Date", selection: $date, displayedComponents: .date)
+
+                    TextField("Notes (Optional)", text: $notes)
+                }
+
+                Button(editingContribution == nil ? "Save" : "Update") {
+                    saveContribution()
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.green)
+                .cornerRadius(8)
+            }
+            .navigationTitle(editingContribution == nil ? "Add Contribution" : "Edit Contribution")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        cancelEditing()
+                    }
+                }
             }
         }
     }
@@ -241,6 +212,64 @@ struct ContributionsPage: View {
                 contributions = decoded
             }
         }
+    }
+
+    private func startAddingContribution() {
+        showForm = true
+
+        if editingContribution == nil {
+            memberName = ""
+            amount = ""
+            date = Date()
+            notes = ""
+        }
+    }
+
+    private func startEditing(_ contribution: Contribution) {
+        editingContribution = contribution
+        memberName = contribution.memberName
+        amount = "\(contribution.amount)"
+        date = contribution.date
+        notes = contribution.notes
+        showForm = true
+    }
+
+    private func deleteContribution(_ contribution: Contribution) {
+        guard let index = contributions.firstIndex(where: { $0.id == contribution.id }) else {
+            return
+        }
+
+        contributions.remove(at: index)
+    }
+
+    private func saveContribution() {
+        guard let amountValue = Double(amount) else { return }
+
+        if let editing = editingContribution,
+           let index = contributions.firstIndex(where: { $0.id == editing.id }) {
+            contributions[index].memberName = memberName
+            contributions[index].amount = amountValue
+            contributions[index].date = date
+            contributions[index].notes = notes
+        } else {
+            let newContribution = Contribution(
+                memberName: memberName,
+                amount: amountValue,
+                date: date,
+                notes: notes
+            )
+
+            contributions.append(newContribution)
+            showPostContributionAlert = true
+        }
+
+        editingContribution = nil
+        showForm = false
+    }
+
+    private func cancelEditing() {
+        editingContribution = nil
+        showForm = false
     }
 }
 

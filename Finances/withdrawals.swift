@@ -84,80 +84,11 @@ struct WithdrawalsPage: View {
     var body: some View {
         NavigationStack {
             VStack {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Total Withdrawals: $\(totalWithdrawals, specifier: "%.2f")")
-                    Text("Total Paid: $\(totalPaid, specifier: "%.2f")")
-                    Text("Total Remaining: $\(totalRemaining, specifier: "%.2f")")
-                }
-                .font(.headline)
-                .padding()
+                totalsSection
+                withdrawalsList
 
-                List {
-                    ForEach(withdrawals) { withdrawal in
-                        VStack(alignment: .leading) {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text("\(withdrawal.name) – $\(withdrawal.amount, specifier: "%.2f")")
-                                        .font(.headline)
-                                    Text("Paid: $\(withdrawal.amountPaid, specifier: "%.2f") | Remaining: $\(withdrawal.balanceRemaining, specifier: "%.2f")")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                    Text("Purpose: \(withdrawal.purpose)")
-                                        .font(.caption)
-                                }
-                                Spacer()
-                                Text(withdrawal.repaymentStatus)
-                                    .font(.subheadline)
-                                    .padding(5)
-                                    .background(color(for: withdrawal.repaymentStatus).opacity(0.2))
-                                    .foregroundColor(color(for: withdrawal.repaymentStatus))
-                                    .cornerRadius(5)
-                            }
-                            Text("Date: \(withdrawal.date.formatted(date: .abbreviated, time: .shortened))")
-                                .font(.caption)
-                        }
-                        .padding(.vertical, 5)
-                        .contextMenu {
-                            if isAdmin {
-                                Button("Add Payment") {
-                                    paymentAlertWithdrawal = withdrawal
-                                    paymentAmount = ""
-                                    showPaymentAlert = true
-                                }
-                                Button("Edit") {
-                                    editingWithdrawal = withdrawal
-                                    name = withdrawal.name
-                                    amount = "\(withdrawal.amount)"
-                                    amountPaid = "\(withdrawal.amountPaid)"
-                                    purpose = withdrawal.purpose
-                                    showForm = true
-                                }
-                                Button("Delete", role: .destructive) {
-                                    if let index = withdrawals.firstIndex(where: { $0.id == withdrawal.id }) {
-                                        withdrawals.remove(at: index)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Add new withdrawal button
                 if isAdmin {
-                    Button("Add Withdrawal") {
-                        showForm = true
-                        editingWithdrawal = nil
-                        name = ""
-                        amount = ""
-                        amountPaid = ""
-                        purpose = "Loan"
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                    .padding(.horizontal)
+                    addWithdrawalButton
                 }
             }
             .navigationTitle("Withdrawals / Loans")
@@ -241,6 +172,101 @@ struct WithdrawalsPage: View {
                 saveWithdrawals()
             }
         }
+    }
+
+    private var totalsSection: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text("Total Withdrawals: $\(totalWithdrawals, specifier: "%.2f")")
+            Text("Total Paid: $\(totalPaid, specifier: "%.2f")")
+            Text("Total Remaining: $\(totalRemaining, specifier: "%.2f")")
+        }
+        .font(.headline)
+        .padding()
+    }
+
+    private var withdrawalsList: some View {
+        List {
+            ForEach(withdrawals) { withdrawal in
+                withdrawalRow(for: withdrawal)
+            }
+        }
+    }
+
+    private var addWithdrawalButton: some View {
+        Button("Add Withdrawal") {
+            showForm = true
+            editingWithdrawal = nil
+            name = ""
+            amount = ""
+            amountPaid = ""
+            purpose = "Loan"
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color.blue)
+        .foregroundColor(.white)
+        .cornerRadius(8)
+        .padding(.horizontal)
+    }
+
+    @ViewBuilder
+    private func withdrawalRow(for withdrawal: Withdrawal) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(withdrawal.name) – $\(withdrawal.amount, specifier: "%.2f")")
+                        .font(.headline)
+                    Text("Paid: $\(withdrawal.amountPaid, specifier: "%.2f") | Remaining: $\(withdrawal.balanceRemaining, specifier: "%.2f")")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text("Purpose: \(withdrawal.purpose)")
+                        .font(.caption)
+                }
+
+                Spacer()
+
+                statusBadge(for: withdrawal.repaymentStatus)
+            }
+
+            Text("Date: \(withdrawal.date.formatted(date: .abbreviated, time: .shortened))")
+                .font(.caption)
+        }
+        .padding(.vertical, 5)
+        .contextMenu {
+            if isAdmin {
+                Button("Add Payment") {
+                    paymentAlertWithdrawal = withdrawal
+                    paymentAmount = ""
+                    showPaymentAlert = true
+                }
+
+                Button("Edit") {
+                    editingWithdrawal = withdrawal
+                    name = withdrawal.name
+                    amount = "\(withdrawal.amount)"
+                    amountPaid = "\(withdrawal.amountPaid)"
+                    purpose = withdrawal.purpose
+                    showForm = true
+                }
+
+                Button("Delete", role: .destructive) {
+                    if let index = withdrawals.firstIndex(where: { $0.id == withdrawal.id }) {
+                        withdrawals.remove(at: index)
+                    }
+                }
+            }
+        }
+    }
+
+    private func statusBadge(for status: String) -> some View {
+        let statusColor = color(for: status)
+
+        return Text(status)
+            .font(.subheadline)
+            .padding(5)
+            .background(statusColor.opacity(0.2))
+            .foregroundColor(statusColor)
+            .cornerRadius(5)
     }
     
     // MARK: Helper to color code status

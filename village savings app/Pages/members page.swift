@@ -27,6 +27,7 @@ struct Member: Identifiable, Hashable, Codable {
 // MARK: - Main View
 struct MembersPage: View {
     var currentUser: Member
+    @EnvironmentObject private var appData: AppData
     
     @State private var searchText = ""
     @State private var members: [Member] = [
@@ -62,6 +63,7 @@ struct MembersPage: View {
     }
     
     var body: some View {
+        
         NavigationStack {
             ZStack {
                 Color.orange.opacity(0.3)
@@ -84,7 +86,9 @@ struct MembersPage: View {
                     
                     // Buttons at the bottom
                     HStack(spacing: 16) {
-                        Button(action: { showingAddSheet = true }) {
+                        Button(action: {
+                            appData.members.append("New member")
+                            showingAddSheet = true }) {
                             Text("Add")
                                 .frame(minWidth: 70)
                                 .padding()
@@ -336,4 +340,5 @@ struct EditMemberSheet: View {
             phone: "+1 555 0100"
         )
     )
+    .environmentObject(AppData())
 }
