@@ -64,6 +64,6 @@ open Village savings tracker.xcworkspace
 
 Your Name - [@shine](https://twitter.com/yourhandle)- ncubeshine376@gmail.com
 
-Project Link: 
+Project Link: [https://github.com/ncubeshine/village-savings-tracker.git](https://github.com/yourusername/your-project)
 
 
