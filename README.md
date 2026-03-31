@@ -22,7 +22,7 @@ git Clone https://github.com/ncubeshine/village-savings-tracker.git
 cd your app
 
 2. ## Open in Xcode
-open YourApp.xcworkspace
+open Village savings tracker.xcworkspace
 
 3. ## Build and run
  
@@ -59,5 +59,11 @@ open YourApp.xcworkspace
         └── village savings appUITests.xctest
 ```
 
+
+# Contact 
+
+Your Name - [@shine](https://twitter.com/yourhandle)- ncubeshine376@gmail.com
+
+Project Link: 
 
 
