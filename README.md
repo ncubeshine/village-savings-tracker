@@ -17,6 +17,18 @@ Village Savings Group Tracker helping a local savings group (mukando/stokvel) tr
 - Xcode 26.3
 
 1. ## Clone Repo
-git Clone 
+git Clone https://github.com/ncubeshine/village-savings-tracker.git
+cd your app
+
+2. ## Open in Xcode
+open YourApp.xcworkspace
+
+3. ## Build and run
+ 
+- Select your target device or simulator
+- Press `Cmd + R ` to build and run the project
+
+
+
 
 
