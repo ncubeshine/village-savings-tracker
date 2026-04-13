@@ -8,7 +8,7 @@ import CryptoKit
 import Security
 
 struct ContentView: View {
-    
+    @EnvironmentObject private var appData: AppData
     @State private var username: String = ""
     @State private var password: String = ""
     
@@ -154,6 +154,7 @@ struct ContentView: View {
             .navigationTitle("Village Savings Tracker ")
             .navigationDestination(isPresented: $navigateToHome) {
                 WelcomeView()
+                    .environmentObject(appData)
             }
         }
     }
@@ -233,5 +234,6 @@ struct DashboardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
        ContentView()
+            .environmentObject(AppData())
     }
 }
