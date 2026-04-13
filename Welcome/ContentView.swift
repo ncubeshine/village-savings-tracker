@@ -136,7 +136,7 @@ struct ContentView: View {
                 // ❌ ERROR TOAST (Red)
                 if showErrorToast {
                     VStack {
-                        Text("✖ Invalid username or password")
+                        Text("❌ Invalid username or password")
                             .foregroundColor(.white)
                             .padding()
                             .background(Color.red)
@@ -149,13 +149,12 @@ struct ContentView: View {
                     .transition(.move(edge: .top))
                 }
                 
-                // Navigation
-                NavigationLink(destination: WelcomeView(), isActive: $navigateToHome) {
-                    EmptyView()
-                }
             }
             //.padding()
             .navigationTitle("Village Savings Tracker ")
+            .navigationDestination(isPresented: $navigateToHome) {
+                WelcomeView()
+            }
         }
     }
 }

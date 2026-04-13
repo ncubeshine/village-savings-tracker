@@ -27,18 +27,19 @@ struct Member: Identifiable, Hashable, Codable {
 // MARK: - Main View
 struct MembersPage: View {
     var currentUser: Member
+    @EnvironmentObject private var appData: AppData
     
     @State private var searchText = ""
-    @State private var members: [Member] = [
-        Member(name: "Shine", email: "shine@example.com", role: "Admin", phone: "+263 78 777 7890"),
-        Member(name: "Sarah", email: "sarah@example.com", role: "Member", phone: "+263 77 567 8901"),
-        Member(name: "Lucy", email: "lucy@example.com", role: "Member", phone: "+263 71 678 9012"),
-        Member(name: "Tana", email: "tana@example.com", role: "Member", phone: "+263 77 789 0123"),
-        Member(name: "Boity", email: "boity@example.com", role: "Member", phone: "+263 77 789 0123"),
-        Member(name: "Ama", email: "ama@example.com", role: "Admin", phone: "+263 77 789 0123"),
-        Member(name: "Privie", email: "privie@example.com", role: "Member", phone: "+263 77 789 0123"),
-        Member(name: "Octie", email: "octie@example.com", role: "Member", phone: "+263 77 789 0123"),
-    ]
+//    @State private var members: [Member] = [
+//        Member(name: "Shine", email: "shine@example.com", role: "Admin", phone: "+263 78 777 7890"),
+//        Member(name: "Sarah", email: "sarah@example.com", role: "Member", phone: "+263 77 567 8901"),
+//        Member(name: "Lucy", email: "lucy@example.com", role: "Member", phone: "+263 71 678 9012"),
+//        Member(name: "Tana", email: "tana@example.com", role: "Member", phone: "+263 77 789 0123"),
+//        Member(name: "Boity", email: "boity@example.com", role: "Member", phone: "+263 77 789 0123"),
+//        Member(name: "Ama", email: "ama@example.com", role: "Admin", phone: "+263 77 789 0123"),
+//        Member(name: "Privie", email: "privie@example.com", role: "Member", phone: "+263 77 789 0123"),
+//        Member(name: "Octie", email: "octie@example.com", role: "Member", phone: "+263 77 789 0123"),
+//    ]
     @State private var showingAddSheet = false
     @State private var showingRemoveSheet = false
     @State private var showingEditSheet = false
@@ -50,9 +51,9 @@ struct MembersPage: View {
     // Filtered search results
     var filteredMembers: [Member] {
         if searchText.isEmpty {
-            return members
+            return appData.members
         } else {
-            return members.filter {
+            return appData.members.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText) ||
                 $0.email.localizedCaseInsensitiveContains(searchText) ||
                 $0.role.localizedCaseInsensitiveContains(searchText) ||
@@ -62,6 +63,7 @@ struct MembersPage: View {
     }
     
     var body: some View {
+        
         NavigationStack {
             ZStack {
                 Color.orange.opacity(0.3)
@@ -84,7 +86,8 @@ struct MembersPage: View {
                     
                     // Buttons at the bottom
                     HStack(spacing: 16) {
-                        Button(action: { showingAddSheet = true }) {
+                        Button(action: {
+                            showingAddSheet = true }) {
                             Text("Add")
                                 .frame(minWidth: 70)
                                 .padding()
@@ -122,16 +125,16 @@ struct MembersPage: View {
         // Sheets
         .sheet(isPresented: $showingAddSheet) {
             AddMemberSheet { newMember in
-                members.append(newMember)
+                appData.members.append(newMember)
             }
         }
         .sheet(isPresented: $showingRemoveSheet) {
-            RemoveMembersSheet(members: members) { selectedToRemove in
-                members.removeAll { selectedToRemove.contains($0) }
+            RemoveMembersSheet(members: appData.members) { selectedToRemove in
+                appData.members.removeAll { selectedToRemove.contains($0) }
             }
         }
         .sheet(isPresented: $showingEditSheet) {
-            EditMemberSheet(members: $members)
+            EditMemberSheet(members: $appData.members)
                 .presentationDetents([.medium, .large])
         }
     }
@@ -336,4 +339,5 @@ struct EditMemberSheet: View {
             phone: "+1 555 0100"
         )
     )
+    .environmentObject(AppData())
 }
