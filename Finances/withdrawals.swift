@@ -50,6 +50,7 @@ struct Withdrawal: Identifiable, Codable, Equatable {
 // MARK: - Withdrawals Page
 struct WithdrawalsPage: View {
     var currentUser: Member
+    @EnvironmentObject var appData: AppData
     var isAdmin: Bool { currentUser.role.lowercased() == "admin" }
 
     @State private var withdrawals: [Withdrawal] = []
@@ -70,11 +71,11 @@ struct WithdrawalsPage: View {
     let purposes = ["Loan", "Emergency", "Other"]
     
     var totalWithdrawals: Double {
-        withdrawals.reduce(0) { $0 + $1.amount }
+        appData.withdrawals.reduce(0) { $0 + $1.amount }
     }
     
     var totalPaid: Double {
-        withdrawals.reduce(0) { $0 + $1.amountPaid }
+        appData.withdrawals.reduce(0) { $0 + $1.amountPaid }
     }
     
     var totalRemaining: Double {
@@ -112,13 +113,13 @@ struct WithdrawalsPage: View {
                             let paidAmount = Double(amountPaid) ?? 0
                             
                             if let editing = editingWithdrawal,
-                               let index = withdrawals.firstIndex(where: { $0.id == editing.id }) {
-                                withdrawals[index].name = name
-                                withdrawals[index].amount = totalAmount
-                                withdrawals[index].amountPaid = paidAmount
-                                withdrawals[index].purpose = purpose
-                                withdrawals[index].date = Date()
-                                withdrawals[index].updateStatus()
+                               let index = appData.withdrawals.firstIndex(where: { $0.id == editing.id }) {
+                                appData.withdrawals[index].name = name
+                                appData.withdrawals[index].amount = totalAmount
+                                appData.withdrawals[index].amountPaid = paidAmount
+                                appData.withdrawals[index].purpose = purpose
+                                appData.withdrawals[index].date = Date()
+                                appData.withdrawals[index].updateStatus()
                             } else {
                                 let newWithdrawal = Withdrawal(
                                     name: name,
@@ -126,7 +127,7 @@ struct WithdrawalsPage: View {
                                     amountPaid: paidAmount,
                                     purpose: purpose
                                 )
-                                withdrawals.append(newWithdrawal)
+                                appData.withdrawals.append(newWithdrawal)
                             }
                             
                             editingWithdrawal = nil
@@ -156,9 +157,9 @@ struct WithdrawalsPage: View {
                     .keyboardType(.decimalPad)
                 Button("Add") {
                     if let withdrawal = paymentAlertWithdrawal,
-                       let index = withdrawals.firstIndex(where: { $0.id == withdrawal.id }),
+                       let index = appData.withdrawals.firstIndex(where: { $0.id == withdrawal.id }),
                        let payment = Double(paymentAmount) {
-                        withdrawals[index].addPayment(payment)
+                        appData.withdrawals[index].addPayment(payment)
                     }
                 }
                 Button("Cancel", role: .cancel) { }
