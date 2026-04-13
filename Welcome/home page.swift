@@ -12,19 +12,28 @@ import Combine
 
 // MARK: - SHARED DATA SOURCE
 class AppData: ObservableObject {
-    @Published var members: [Member] = []
+    @Published var members: [Member] = [
+        Member(name: "Shine", email: "shine@example.com", role: "Admin", phone: "+263 78 777 7890"),
+        Member(name: "Sarah", email: "sarah@example.com", role: "Member", phone: "+263 77 567 8901"),
+        Member(name: "Lucy", email: "lucy@example.com", role: "Member", phone: "+263 71 678 9012"),
+        Member(name: "Tana", email: "tana@example.com", role: "Member", phone: "+263 77 789 0123"),
+        Member(name: "Boity", email: "boity@example.com", role: "Member", phone: "+263 77 789 0123"),
+        Member(name: "Ama", email: "ama@example.com", role: "Admin", phone: "+263 77 789 0123"),
+        Member(name: "Privie", email: "privie@example.com", role: "Member", phone: "+263 77 789 0123"),
+        Member(name: "Octie", email: "octie@example.com", role: "Member", phone: "+263 77 789 0123"),
+    ]
+
     @Published var contributions: [Contribution] = []
     @Published var withdrawals: [Withdrawal] = []
-    
-    // Computed Dashboard Values
+
     var numberOfMembers: Int {
         members.count
     }
-    
+
     var totalContributions: Double {
         contributions.reduce(0) { $0 + $1.amount }
     }
-    
+
     var totalWithdrawals: Double {
         withdrawals.reduce(0) { $0 + $1.amount }
     }
@@ -32,45 +41,44 @@ class AppData: ObservableObject {
 
 // MARK: - HOME PAGE
 struct HomePage: View {
-    
+
     var currentUser: Member
-    
-    @EnvironmentObject var appData: AppData   // 👈 Shared data
-    
+    @EnvironmentObject var appData: AppData
+
     var isAdmin: Bool {
         currentUser.role.lowercased() == "admin"
     }
-    
+
     var body: some View {
-        
+
         NavigationStack {
             ZStack {
                 Color.orange.opacity(0.3)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(alignment: .leading, spacing: 25) {
-                        
+
                         Text("Summary Dashboard")
                             .font(.title)
                             .fontWeight(.bold)
-                        
+
                         Text("Logged in as: \(currentUser.name) (\(currentUser.role))")
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        
+
                         VStack(spacing: 20) {
-                            
+
                             NavigationLink {
                                 MembersPage(currentUser: currentUser)
                             } label: {
                                 SummaryCard(
                                     title: "Number of Members",
-                                    value: "\(appData.numberOfMembers)",
+                                    value: "\(appData.numberOfMembers)", 
                                     color: .gray
                                 )
                             }
-                            
+
                             NavigationLink {
                                 ContributionsPage(currentUser: currentUser)
                             } label: {
@@ -80,7 +88,7 @@ struct HomePage: View {
                                     color: .gray
                                 )
                             }
-                            
+
                             NavigationLink {
                                 WithdrawalsPage(currentUser: currentUser)
                             } label: {
@@ -90,7 +98,7 @@ struct HomePage: View {
                                     color: .brown
                                 )
                             }
-                            
+
                             SummaryCard(
                                 title: "Upcoming meetings/targets",
                                 value: "No upcoming events",
