@@ -26,6 +26,7 @@ struct Contribution: Identifiable, Codable, Equatable {
 
 struct ContributionsPage: View {
     var currentUser: Member
+    @EnvironmentObject var appData: AppData
     
     var isAdmin: Bool {
         currentUser.role.lowercased() == "admin"
@@ -33,8 +34,7 @@ struct ContributionsPage: View {
     
     
     
-    @State private var contributions: [Contribution] = []
-    
+   
     // Form fields
     @State private var memberName = ""
     @State private var amount = ""
@@ -51,7 +51,7 @@ struct ContributionsPage: View {
     @State private var navigateToReports = false
     
     var totalContributions: Double {
-        contributions.reduce(0) { $0 + $1.amount }
+        appData.contributions.reduce(0) { $0 + $1.amount }
     }
     
     var body: some View {
@@ -71,12 +71,12 @@ struct ContributionsPage: View {
             }
             
             // Automatically save whenever contributions change
-            .onChange(of: contributions) {
+            .onChange(of: appData.contributions) {
                 saveContributions()
             }
             
             .sheet(isPresented: $showForm) {
-                contributionFormView
+                /*appData.*/contributionFormView
             }
             
             .alert("Contribution Added", isPresented: $showPostContributionAlert) {
@@ -99,7 +99,7 @@ struct ContributionsPage: View {
                 .padding()
 
             List {
-                ForEach(contributions) { contribution in
+                ForEach(appData.contributions) { contribution in
                     contributionRow(for: contribution)
                 }
             }
@@ -201,7 +201,7 @@ struct ContributionsPage: View {
     // MARK: - Persistence Functions
     
     func saveContributions() {
-        if let encoded = try? JSONEncoder().encode(contributions) {
+        if let encoded = try? JSONEncoder().encode(appData.contributions) {
             UserDefaults.standard.set(encoded, forKey: "savedContributions")
         }
     }
@@ -209,7 +209,7 @@ struct ContributionsPage: View {
     func loadContributions() {
         if let data = UserDefaults.standard.data(forKey: "savedContributions") {
             if let decoded = try? JSONDecoder().decode([Contribution].self, from: data) {
-                contributions = decoded
+                appData.contributions = decoded
             }
         }
     }
@@ -235,22 +235,22 @@ struct ContributionsPage: View {
     }
 
     private func deleteContribution(_ contribution: Contribution) {
-        guard let index = contributions.firstIndex(where: { $0.id == contribution.id }) else {
+        guard let index = appData.contributions.firstIndex(where: { $0.id == contribution.id }) else {
             return
         }
 
-        contributions.remove(at: index)
+        appData.contributions.remove(at: index)
     }
 
     private func saveContribution() {
         guard let amountValue = Double(amount) else { return }
 
         if let editing = editingContribution,
-           let index = contributions.firstIndex(where: { $0.id == editing.id }) {
-            contributions[index].memberName = memberName
-            contributions[index].amount = amountValue
-            contributions[index].date = date
-            contributions[index].notes = notes
+           let index = appData.contributions.firstIndex(where: { $0.id == editing.id }) {
+            appData.contributions[index].memberName = memberName
+            appData.contributions[index].amount = amountValue
+            appData.contributions[index].date = date
+            appData.contributions[index].notes = notes
         } else {
             let newContribution = Contribution(
                 memberName: memberName,
@@ -259,7 +259,7 @@ struct ContributionsPage: View {
                 notes: notes
             )
 
-            contributions.append(newContribution)
+            appData.contributions.append(newContribution)
             showPostContributionAlert = true
         }
 
@@ -283,5 +283,6 @@ struct ContributionsPage_Previews: PreviewProvider {
                 phone: "+1 555 0100"
             )
         )
+        .environmentObject(AppData())
     }
 }
